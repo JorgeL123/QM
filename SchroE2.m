@@ -2,7 +2,7 @@ function dP=SchroE2(P,V,dx,hbar,m);
 dP=zeros(length(P(1,:)));
 dP(1,:)=0; dP(end,:)=0;dP(:,1)=0; dP(:,end)=0;
 %
-for i=2:length(P(1,:))-2;
+for i=2:length(P(1,:))-1;
 dP(2,i)=j*hbar/(2*m)*(P(1,i)-4*P(2,i)+P(2,i+1)+P(2,i-1))/(dx^2)-j*V(2,i)*P(2,i)/hbar;
 dP(end-1,i)=j*hbar/(2*m)*(P(end,i)-4*P(end-1,i)+P(end-2,i)+P(end-1,i+1)+P(end-1,i-1))/(dx^2)-j*V(end-1,i)*P(end-1,i)/hbar;
 dP(i,2)=j*hbar/(2*m)*(P(i,1)-4*P(i,2)+P(i+1,2)+P(i-1,2))/(dx^2)-j*V(i,2)*P(i,2)/hbar;
