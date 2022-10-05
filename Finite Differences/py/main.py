@@ -1,6 +1,7 @@
 # libs
 import numpy as np
 import matplotlib.pyplot as plt
+from schrodinger import SchroE
 
 # constants
 dx = 0.05
@@ -31,8 +32,9 @@ V[np.abs(x) < a / 5] = V0
 # ---
 
 for k in range(len(t)):
+    print(t[k])
     if t[k] == T[n]:
-        plt.clf()
+        # plt.clf()
         plt.plot(x, V, 'k', linewidth=1.1)
         plt.plot(x, np.abs(P), 'b', linewidth=1.5)
         plt.plot(x, np.real(P), 'r', linewidth=1.5)
@@ -40,6 +42,26 @@ for k in range(len(t)):
         plt.xlabel("x")
         plt.ylabel('P')
         plt.legend(['V', f'|P(x,{t[k]})|', f'Re P(x,{t[k]})'])
-        plt.show()
         n += 1
-        break
+
+        if n == 15:
+            break
+
+    # Solve using RK4
+    K1 = SchroE(P, V, dx, hbar, m)
+    K2 = SchroE(P + dt * K1 / 2, V, dx, hbar, m)
+    K3 = SchroE(P + dt * K2 / 2, V, dx, hbar, m)
+    K4 = SchroE(P + dt * K3, V, dx, hbar, m)
+
+    A = P[-1]
+    B = P[-2]
+    C = P[0]
+    D = P[1]
+
+    P = P + dt / 6 * (K1 + 2 * K2 + 2 * K3 + K4)
+
+    # Mur Boundary condition: not very clean for big wave packets.
+    P[-1] = B + (r - 1) / (r + 1) * (P[-2] - A)
+    P[0] = D + (r - 1) / (r + 1) * (P[1] - C)
+
+plt.show()
