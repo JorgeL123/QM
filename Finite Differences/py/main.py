@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from schrodinger import SchroE
 
+plt.style.use(['seaborn-v0_8-notebook'])
+
 # constants
 dx = 0.05
 dt = 0.01
@@ -24,28 +26,26 @@ r = hbar * c / (2 * m) * dt / dx
 # define potential
 V = np.zeros_like(x)
 
-V[np.abs(x) < a / 5] = V0
+# V[np.abs(x) < a / 5] = V0
 # V[np.logical_and(np.abs(x) <= a / 5, np.abs(x) >= a / 15)] = V0
-# V = x**2 / 40 - 0.5
+V = x**2 / 40 - 0.5
 # V = (x**4 / 25 - x**2 + 4) / 15 - 0.3
 
 # ---
 
 for k in range(len(t)):
-    print(t[k])
     if t[k] == T[n]:
-        # plt.clf()
-        plt.plot(x, V, 'k', linewidth=1.1)
-        plt.plot(x, np.abs(P), 'b', linewidth=1.5)
-        plt.plot(x, np.real(P), 'r', linewidth=1.5)
+        plt.clf()
         plt.axis([-a, a, -1.1, 1.1])
         plt.xlabel("x")
         plt.ylabel('P')
-        plt.legend(['V', f'|P(x,{t[k]})|', f'Re P(x,{t[k]})'])
-        n += 1
+        plt.legend(['V', f'|P(x,t)|', f'Re P(x,t)'])
+        plt.plot(x, V, 'k', linewidth=1.1)
+        plt.plot(x, np.abs(P), 'b', linewidth=1.5)
+        plt.plot(x, np.real(P), 'r', linewidth=1.5)
+        plt.pause(0.001)
 
-        if n == 15:
-            break
+        n += 1
 
     # Solve using RK4
     K1 = SchroE(P, V, dx, hbar, m)
